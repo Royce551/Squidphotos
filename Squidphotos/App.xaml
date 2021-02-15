@@ -1,0 +1,15 @@
+﻿<Application x:Class="Squidphotos.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local1="clr-namespace:Squidphotos.Styles"
+             xmlns:local="clr-namespace:Squidphotos"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="StylesDictionary" Source="pack://application:,,,/Styles/Styles.xaml"/>
+                <local1:SkinResourceDictionary LightSource="pack://application:,,,/Styles/LightTheme.xaml" DarkSource="pack://application:,,,/Styles/DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
