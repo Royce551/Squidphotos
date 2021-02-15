@@ -7,17 +7,36 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ViewerPage">
-
+    <Page.Resources>
+        <Style x:Key="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
     <Grid>
         <Grid>
-            <Image x:Name="BackgroundImage" Panel.ZIndex="0" Stretch="UniformToFill">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <DockPanel Panel.ZIndex="5" Background="Transparent" LastChildFill="False">
+                <Button x:Name="LibraryButton" DockPanel.Dock="Left" Content="Library" Margin="10,0,0,0"/>
+                <Button x:Name="OpenButton" DockPanel.Dock="Left" Content="Open" Margin="10,0,0,0" Click="OpenButton_Click"/>
+
+                <Button x:Name="ResetButton" DockPanel.Dock="Right" Content="Reset Image" Visibility="Collapsed" Margin="0,0,10,0" Click="ResetButton_Click"/>
+                <Button x:Name="ResizeButton" DockPanel.Dock="Right" Content="Resize" Margin="0,0,10,0"/>
+                <Button x:Name="CopyButton" DockPanel.Dock="Right" Content="Copy" Margin="0,0,10,0"/>
+            </DockPanel>
+            <Rectangle Panel.ZIndex="4" Opacity="0.55" Fill="{StaticResource BackgroundColor}"/>
+
+            <Image x:Name="BackgroundImage" Grid.RowSpan="2" Panel.ZIndex="0" Stretch="UniformToFill">
                 <Image.Effect>
                     <BlurEffect Radius="30" KernelType="Gaussian"/>
                 </Image.Effect>
             </Image>
-            <Rectangle x:Name="OverlayRectangle" Panel.ZIndex="1" Opacity="0.55" Fill="{StaticResource ForegroundColor}"/>
+            <Rectangle x:Name="OverlayRectangle" Grid.RowSpan="2" Panel.ZIndex="1" Opacity="0.55" Fill="{StaticResource ForegroundColor}"/>
 
-            <local:ZoomBorder x:Name="ContentBorder" Margin="50" Panel.ZIndex="2">
+            <local:ZoomBorder Grid.Row="2" x:Name="ContentBorder" Margin="50" Panel.ZIndex="2">
                 <Image x:Name="ForegroundImage" RenderOptions.BitmapScalingMode="HighQuality" Panel.ZIndex="2">
                 </Image>
                 <Border.Effect>

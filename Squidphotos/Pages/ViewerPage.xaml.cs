@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Squidphotos.Pages
 {
@@ -21,6 +21,8 @@ namespace Squidphotos.Pages
     /// </summary>
     public partial class ViewerPage : Page
     {
+        public readonly string[] AllowableFileTypes = {".bmp", ".jpg", ".jpeg", ".png", ".tiff", ".gif", ".ico"};
+
         private string filePath;
         private MemoryStream image;
         public ViewerPage(string filePath)
@@ -28,9 +30,15 @@ namespace Squidphotos.Pages
             this.filePath = filePath;
             InitializeComponent();
             PresentImage(filePath);
+            ContentBorder.Interacted += ContentBorder_Interacted;
         }
         public async void PresentImage(string filePath)
         {
+            if (!AllowableFileTypes.Contains(Path.GetExtension(filePath)))
+            {
+                MessageBox.Show("That file type can't be displayed :(");
+                return;
+            }
             var image = new MemoryStream(await Task.Run(() => File.ReadAllBytes(filePath)));
             BackgroundImage.Source = ForegroundImage.Source = BitmapFrame.Create(image, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
             this.image = image;
@@ -45,6 +53,21 @@ namespace Squidphotos.Pages
             margin.Left += scrollValue;
             margin.Right += scrollValue;
             ContentBorder.Margin = margin;
+        }
+        private void ContentBorder_Interacted(object sender, EventArgs e)
+        {
+            ResetButton.Visibility = Visibility.Visible;
+        }
+        private void OpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true) PresentImage(openFileDialog.FileName);
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentBorder.Reset();
+            ResetButton.Visibility = Visibility.Collapsed;
         }
     }
 }

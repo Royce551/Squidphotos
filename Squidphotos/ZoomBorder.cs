@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Squidphotos.Pages;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,8 @@ namespace Squidphotos
 {
     public class ZoomBorder : Border
     {
+        public EventHandler Interacted;
+
         private UIElement child = null;
         private Point origin;
         private Point start;
@@ -90,12 +93,12 @@ namespace Squidphotos
 
                 absoluteX = relative.X * st.ScaleX + tt.X;
                 absoluteY = relative.Y * st.ScaleY + tt.Y;
-
                 st.ScaleX += zoom;
                 st.ScaleY += zoom;
 
                 tt.X = absoluteX - relative.X * st.ScaleX;
                 tt.Y = absoluteY - relative.Y * st.ScaleY;
+                Interacted?.Invoke(null, EventArgs.Empty);
             }
         }
 
@@ -135,6 +138,7 @@ namespace Squidphotos
                     Vector v = start - e.GetPosition(this);
                     tt.X = origin.X - v.X;
                     tt.Y = origin.Y - v.Y;
+                    Interacted?.Invoke(null, EventArgs.Empty);
                 }
             }
         }
