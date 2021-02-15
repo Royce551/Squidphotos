@@ -16,10 +16,13 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/> 
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <DockPanel Panel.ZIndex="5" Background="Transparent" LastChildFill="False">
+                <Button x:Name="PreviousButton" DockPanel.Dock="Left" Content="&lt;&lt;" Margin="10,0,0,0" Click="PreviousButton_Click"/>
+                <TextBlock x:Name="PositionTextBlock" DockPanel.Dock="Left" Text="Loading, please wait..." Foreground="{StaticResource PrimaryTextColor}" Margin="10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonDown="PositionTextBlock_MouseLeftButtonDown"/>
+                <Button x:Name="NextButton" DockPanel.Dock="Left" Content=">>" Margin="10,0,0,0" Click="NextButton_Click"/>
                 <Button x:Name="LibraryButton" DockPanel.Dock="Left" Content="Library" Margin="10,0,0,0"/>
                 <Button x:Name="OpenButton" DockPanel.Dock="Left" Content="Open" Margin="10,0,0,0" Click="OpenButton_Click"/>
 
