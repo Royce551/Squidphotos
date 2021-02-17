@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Squidphotos"
       mc:Ignorable="d" 
+      KeyDown="Page_KeyDown"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ViewerPage">
     <Page.Resources>
@@ -28,7 +29,7 @@
 
                 <Button x:Name="ResetButton" DockPanel.Dock="Right" Content="Reset Image" Visibility="Collapsed" Margin="0,0,10,0" Click="ResetButton_Click"/>
                 <Button x:Name="ResizeButton" DockPanel.Dock="Right" Content="Resize" Margin="0,0,10,0"/>
-                <Button x:Name="CopyButton" DockPanel.Dock="Right" Content="Copy" Margin="0,0,10,0"/>
+                <Button x:Name="OpenFileExplorerButton" DockPanel.Dock="Right" Content="Open in File Explorer" Margin="0,0,10,0" Click="OpenFileExplorerButton_Click"/>
             </DockPanel>
             <Rectangle Panel.ZIndex="4" Opacity="0.55" Fill="{StaticResource BackgroundColor}"/>
 

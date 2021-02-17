@@ -2,6 +2,7 @@
 using Squidphotos.Forms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,16 +25,23 @@ namespace Squidphotos.Pages
     {
         public readonly string[] AllowableFileTypes = {".bmp", ".jpg", ".jpeg", ".png", ".tiff", ".gif", ".ico"};
 
+        private MainWindow window;
         private string filePath;
         private List<string> imagesInDirectory = new List<string>();
         private int currentImage = 0;
         private MemoryStream image;
-        public ViewerPage(string filePath)
+        public ViewerPage(MainWindow window, string filePath = null)
         {
             this.filePath = filePath;
+            this.window = window;
             InitializeComponent();
-            Init();
             ContentBorder.Interacted += ContentBorder_Interacted;
+            if (filePath is null)
+            {
+                PositionTextBlock.Text = "Use that button over there --> to open an image!";
+                return;
+            }
+            Init();
         }
         public async void Init()
         {
@@ -48,9 +56,20 @@ namespace Squidphotos.Pages
                 MessageBox.Show("That file type can't be displayed :(");
                 return;
             }
+
             var image = new MemoryStream(await Task.Run(() => File.ReadAllBytes(imagesInDirectory[currentImage])));
             PositionTextBlock.Text = $"{currentImage + 1}/{imagesInDirectory.Count}";
+            window.Title = $"{imagesInDirectory[currentImage]} - Squidphotos";
             BackgroundImage.Source = ForegroundImage.Source = BitmapFrame.Create(image, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+
+            if (currentImage + 1 > imagesInDirectory.Count - 1) NextButton.IsEnabled = false;
+            else NextButton.IsEnabled = true;
+            if (currentImage - 1 < 0)
+            {
+                PreviousButton.IsEnabled = false;
+            }
+            else PreviousButton.IsEnabled = true;
+
             this.image = image;
         }
         public void FindImagesInDirectory(string filePath)
@@ -58,6 +77,22 @@ namespace Squidphotos.Pages
             imagesInDirectory.Clear();
             imagesInDirectory.AddRange(Directory.EnumerateFiles(Path.GetDirectoryName(filePath), "*.*", SearchOption.TopDirectoryOnly).Where(x => AllowableFileTypes.Contains(Path.GetExtension(x))));
             currentImage = imagesInDirectory.FindIndex(y => y == filePath);
+        }
+        public void NextImage()
+        {
+            if (currentImage < imagesInDirectory.Count - 1)
+            {
+                currentImage++;
+                PresentImage();
+            }
+        }
+        public void PreviousImage()
+        {
+            if (currentImage > 0)
+            {
+                currentImage--;
+                PresentImage();
+            }
         }
         private void Page_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -89,23 +124,8 @@ namespace Squidphotos.Pages
             ResetButton.Visibility = Visibility.Collapsed;
         }
 
-        private void PreviousButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentImage > 0)
-            {
-                currentImage--;
-                PresentImage();
-            }
-        }
-
-        private void NextButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentImage < imagesInDirectory.Count - 1)
-            {
-                currentImage++;
-                PresentImage();
-            }
-        }
+        private void PreviousButton_Click(object sender, RoutedEventArgs e) => PreviousImage();
+        private void NextButton_Click(object sender, RoutedEventArgs e) => NextImage();
 
         private void PositionTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -121,5 +141,22 @@ namespace Squidphotos.Pages
                 else MessageBox.Show("That's not a valid image.");
             }
         }
+
+        private void Page_KeyDown(object sender, KeyEventArgs e)
+    {
+            switch (e.Key)
+            {
+                case Key.Left:
+                    PreviousImage();
+                    e.Handled = true;
+                    break;
+                case Key.Right:
+                    NextImage();
+                    e.Handled = true;
+                    break;
+            }
+        }
+
+        private void OpenFileExplorerButton_Click(object sender, RoutedEventArgs e) => Process.Start(Path.GetDirectoryName(filePath));
     }
 }

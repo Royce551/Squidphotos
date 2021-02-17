@@ -24,7 +24,8 @@ namespace Squidphotos
         public MainWindow()
         {
             InitializeComponent();
-            ContentFrame.Navigate(new ViewerPage(@"C:\Users\poohw\OneDrive\Desktop\stuff on desktop\Nekoparaiten-Ann_07-04-19_002(CUnet)(noise_scale)(Level0)(x2.000000).png"));
+            ContentFrame.Navigate(new ViewerPage(this));
+            ContentFrame.Focus();
         }
     }
 }
